@@ -41,13 +41,15 @@ void usage()
 int process(jack_nframes_t nframes, void *arg)
 {
     jack_default_audio_sample_t *in = (jack_default_audio_sample_t *) jack_port_get_buffer(input_port, nframes);
-	void* port_buf = jack_port_get_buffer(output_port, nframes);
-	unsigned char* buffer;
-	jack_midi_clear_buffer(port_buf);
+    void* port_buf = jack_port_get_buffer(output_port, nframes);
+    unsigned char* buffer;
+    jack_midi_clear_buffer(port_buf);
 
-	int i;
-    for(i=0; i<(sizeof (in) /sizeof (in[0]));i++) {
-        if(in[i] > threshold && wait_cnt == 0) {
+    int i;
+    for(i=0; i<(sizeof (in) /sizeof (in[0]));i++) 
+    {
+        if(in[i] > threshold && wait_cnt == 0) 
+        {
             wait_cnt = gate;
 
             printf("\n%1f\n",in[i]);
@@ -56,47 +58,48 @@ int process(jack_nframes_t nframes, void *arg)
             buffer[1] = note_frq;
             buffer[0] = 0x90;
         }
-        if(wait_cnt > 0) {
+        if(wait_cnt > 0) 
+        {
             wait_cnt = --wait_cnt;
             //printf("Waiting: %d\n",wait_cnt);
         }
     }
 
-	return 0;
+    return 0;
 }
 
 int main(int narg, char **args)
 {
-	int i;
-	jack_nframes_t nframes;
-	if(narg<5)
-	{
-		usage();
-		exit(1);
-	}
-	if((client = jack_client_open (args[1], JackNullOption, NULL)) == 0)
-	{
-		fprintf (stderr, "jack server not running?\n");
-		return 1;
-	}
-	jack_set_process_callback (client, process, 0);
-	input_port  = jack_port_register (client, "input", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-	output_port = jack_port_register (client, "out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
+    int i;
+    jack_nframes_t nframes;
+    if(narg<5)
+    {
+        usage();
+        exit(1);
+    }
+    if((client = jack_client_open (args[1], JackNullOption, NULL)) == 0)
+    {
+        fprintf (stderr, "jack server not running?\n");
+        return 1;
+    }
+    jack_set_process_callback (client, process, 0);
+    input_port  = jack_port_register (client, "input", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+    output_port = jack_port_register (client, "out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
 
 
     note_frq = atoi(args[2]);
     gate = atoi(args[3]);
     threshold = atof(args[4]);
 
-	if (jack_activate(client))
-	{
-		fprintf (stderr, "cannot activate client");
-		return 1;
-	}
+    if (jack_activate(client))
+    {
+        fprintf (stderr, "cannot activate client");
+        return 1;
+    }
 
-	while (1)
-	{
-		sleep(1);
-	};
-	
+    while (1)
+    {
+        sleep(1);
+    };
+
 }
