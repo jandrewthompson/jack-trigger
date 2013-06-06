@@ -86,7 +86,6 @@ int main(int narg, char **args)
     input_port  = jack_port_register (client, "input", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
     output_port = jack_port_register (client, "out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
 
-
     note_frq = atoi(args[2]);
     gate = atoi(args[3]);
     threshold = atof(args[4]);
