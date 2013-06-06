@@ -32,7 +32,7 @@ int process(jack_nframes_t nframes, void *arg)
     jack_midi_clear_buffer(port_buf);
 
     int i;
-    for(i=0; i<(sizeof (in) /sizeof (in[0]));i++) 
+    for(i=0; i < nframes ;i++) 
     {
         if(in[i] > threshold && wait_cnt == 0) 
         {
